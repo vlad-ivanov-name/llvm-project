@@ -236,7 +236,7 @@ int AssignInt(int V){
 // CHECK-NEXT: [[J:%.*]] = zext i1 %9 to i32
 // CHECK-NEXT: store i32 [[J]], ptr [[XAddr]], align 4
 // CHECK-NEXT: [[I:%.*]] = load i32, ptr [[XAddr]], align 4
-// CHECK-NEXT: [[LoadV:%.*]] = trunc i32 [[I]] to i1
+// CHECK-NEXT: [[LoadV:%.*]] = icmp ne i32 [[I]], 0
 // CHECK-NEXT: ret i1 [[LoadV]]
 bool AssignBool(bool V) {
   bool X = V.x;
@@ -257,7 +257,7 @@ bool AssignBool(bool V) {
 // CHECK-NEXT: [[A:%.*]] = zext <2 x i1> [[LV]] to <2 x i32>
 // CHECK-NEXT: store <2 x i32> [[A]], ptr [[X]], align 8
 // CHECK-NEXT: [[B:%.*]] = load i32, ptr [[VAddr]], align 4
-// CHECK-NEXT: [[LV1:%.*]] = trunc i32 [[B]] to i1
+// CHECK-NEXT: [[LV1:%.*]] = icmp ne i32 [[B]], 0
 // CHECK-NEXT: [[D:%.*]] = zext i1 [[LV1]] to i32
 // CHECK-NEXT: [[C:%.*]] = getelementptr <2 x i32>, ptr [[X]], i32 0, i32 1
 // CHECK-NEXT: store i32 [[D]], ptr [[C]], align 4

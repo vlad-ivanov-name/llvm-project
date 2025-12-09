@@ -8,10 +8,10 @@
 
 struct has_bool {
     _Bool b;
-    unsigned _BitInt(1) c;
+    unsigned _BitInt(1) bitint;
 };
 
-// CHECK: @foo
+// CHECK-LABEL: @foo
 int foo(struct has_bool *b) {
     // CHECK-STRICT: [[BOOL:%.+]] = load i8, ptr {{.+}}, !range ![[RANGE_BOOL:[0-9]+]]
     // CHECK-STRICT-NOT: and i8 [[BOOL]], 1
@@ -35,8 +35,8 @@ int foo(struct has_bool *b) {
     return b->b;
 }
 
-// CHECK: @bar
-int bar(struct has_bool *c) {
+// CHECK-LABEL: @bar
+int bar(struct has_bool *b) {
     // CHECK-STRICT: [[BITINT:%.+]] = load i8, ptr {{.+}}, !range ![[RANGE_BOOL:[0-9]+]]
     // CHECK-STRICT-NOT: and i8 [[BITINT]], 1
     // CHECK-STRICT-NOT: icmp ne i8 [[BITINT]], 0
@@ -47,7 +47,7 @@ int bar(struct has_bool *c) {
 
     // CHECK-NONZERO-NOT: !range
     // CHECK-NONZERO: [[BITINT:%.+]] = load i8
-    // CHECK-NONZERO: icmp ne i8 [[BITINT]], 0
+    // CHECK-NONZERO: and i8 [[BITINT]], 1
 
     // CHECK-UBSAN-STRICT-NOT: !range
     // CHECK-UBSAN-STRICT: [[BITINT:%.+]] = load i8, ptr {{.+}}
@@ -56,7 +56,7 @@ int bar(struct has_bool *c) {
     // CHECK-UBSAN-TRUNCATE-NOT: !range
     // CHECK-UBSAN-TRUNCATE: [[BITINT:%.+]] = load i8, ptr {{.+}}
     // CHECK-UBSAN-TRUNCATE: icmp ult i8 [[BITINT]], 2
-    return c->c;
+    return b->bitint;
 }
 
 // CHECK_STRICT: ![[RANGE_BOOL]] = !{i8 0, i8 2}

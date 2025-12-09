@@ -2,7 +2,7 @@
 
 // CHECK: define internal zeroext i1 @"\01-[A0 p]"(
 // CHECK:   %[[ATOMIC_LOAD:.*]] = load atomic i8, ptr %{{.*}} seq_cst, align 1
-// CHECK:   %[[TOBOOL:.*]] = trunc i8 %[[ATOMIC_LOAD]] to i1
+// CHECK:   %[[TOBOOL:.*]] = icmp ne i8 %[[ATOMIC_LOAD]], 0
 // CHECK:   ret i1 %[[TOBOOL]]
 
 // CHECK: define internal void @"\01-[A0 setP:]"({{.*}} i1 noundef zeroext {{.*}})
@@ -11,7 +11,7 @@
 
 // CHECK: define internal zeroext i1 @"\01-[A1 p]"(
 // CHECK:   %[[ATOMIC_LOAD:.*]] = load atomic i8, ptr %{{.*}} unordered, align 1
-// CHECK:   %[[TOBOOL:.*]] = trunc i8 %load to i1
+// CHECK:   %[[TOBOOL:.*]] = icmp ne i8 %[[ATOMIC_LOAD]], 0
 // CHECK:   ret i1 %[[TOBOOL]]
 
 // CHECK: define internal void @"\01-[A1 setP:]"({{.*}} i1 noundef zeroext %p)

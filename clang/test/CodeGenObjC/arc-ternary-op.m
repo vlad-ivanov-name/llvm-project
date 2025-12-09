@@ -14,7 +14,7 @@ void test0(_Bool cond) {
   // CHECK-NEXT: store
   // CHECK-NEXT: call void @llvm.lifetime.start.p0(ptr [[X]])
   // CHECK-NEXT: [[T0:%.*]] = load i8, ptr [[COND]]
-  // CHECK-NEXT: [[T1:%.*]] = trunc i8 [[T0]] to i1
+  // CHECK-NEXT: [[T1:%.*]] = icmp ne i8 [[T0]], 0
   // CHECK-NEXT: store i1 false, ptr [[RELCOND]]
   // CHECK-NEXT: br i1 [[T1]],
   // CHECK:      br label

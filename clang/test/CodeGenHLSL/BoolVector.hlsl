@@ -27,7 +27,7 @@ bool fn1() {
 // CHECK-NEXT: [[StoreV:%.*]] = zext i1 {{.*}} to i32
 // CHECK-NEXT: store i32 [[StoreV]], ptr [[VAddr]], align 4
 // CHECK-NEXT: [[L:%.*]] = load i32, ptr [[VAddr]], align 4
-// CHECK-NEXT: [[LoadV:%.*]] = trunc i32 [[L]] to i1
+// CHECK-NEXT: [[LoadV:%.*]] = icmp ne i32 [[L]], 0
 // CHECK-NEXT: [[Vec:%.*]] = insertelement <2 x i1> poison, i1 [[LoadV]], i32 0
 // CHECK-NEXT: [[Vec1:%.*]] = insertelement <2 x i1> [[Vec]], i1 true, i32 1
 // CHECK-NEXT: [[Z:%.*]] = zext <2 x i1> [[Vec1]] to <2 x i32>
@@ -83,7 +83,7 @@ void fn5() {
 // CHECK-NEXT: store i32 0, ptr [[V]], align 4
 // CHECK-NEXT: call void @llvm.memcpy.p0.p0.i32(ptr align 1 [[S]], ptr align 1 {{.*}}, i32 12, i1 false)
 // CHECK-NEXT: [[Y:%.*]] = load i32, ptr [[V]], align 4
-// CHECK-NEXT: [[LV:%.*]] = trunc i32 [[Y]] to i1
+// CHECK-NEXT: [[LV:%.*]] = icmp ne i32 [[Y]], 0
 // CHECK-NEXT: [[BV:%.*]] = getelementptr inbounds nuw %struct.S, ptr [[S]], i32 0, i32 0
 // CHECK-NEXT: [[Z:%.*]] = zext i1 [[LV]] to i32
 // CHECK-NEXT: [[Ptr:%.*]] = getelementptr <2 x i32>, ptr [[BV]], i32 0, i32 1

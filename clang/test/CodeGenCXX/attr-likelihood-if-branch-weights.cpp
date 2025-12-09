@@ -11,7 +11,7 @@ extern bool B();
 // CHECK-NEXT:  [[ENTRY:.*:]]
 // CHECK-NEXT:    [[RETVAL:%.*]] = alloca i1, align 1
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6:![0-9]+]], !range [[RNG8:![0-9]+]], !noundef [[META9:![0-9]+]]
-// CHECK-NEXT:    [[LOADEDV:%.*]] = trunc i8 [[TMP0]] to i1
+// CHECK-NEXT:    [[LOADEDV:%.*]] = icmp ne i8 [[TMP0]], 0
 // CHECK-NEXT:    [[LOADEDV_EXPVAL:%.*]] = call i1 @llvm.expect.i1(i1 [[LOADEDV]], i1 true)
 // CHECK-NEXT:    br i1 [[LOADEDV_EXPVAL]], label %[[IF_THEN:.*]], label %[[IF_END:.*]]
 // CHECK:       [[IF_THEN]]:
@@ -39,7 +39,7 @@ bool f() {
 // CHECK-NEXT:  [[ENTRY:.*:]]
 // CHECK-NEXT:    [[RETVAL:%.*]] = alloca i1, align 1
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV:%.*]] = trunc i8 [[TMP0]] to i1
+// CHECK-NEXT:    [[LOADEDV:%.*]] = icmp ne i8 [[TMP0]], 0
 // CHECK-NEXT:    [[LOADEDV_EXPVAL:%.*]] = call i1 @llvm.expect.i1(i1 [[LOADEDV]], i1 false)
 // CHECK-NEXT:    br i1 [[LOADEDV_EXPVAL]], label %[[IF_THEN:.*]], label %[[IF_END:.*]]
 // CHECK:       [[IF_THEN]]:
@@ -68,7 +68,7 @@ bool g() {
 // CHECK-NEXT:  [[ENTRY:.*:]]
 // CHECK-NEXT:    [[RETVAL:%.*]] = alloca i1, align 1
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV:%.*]] = trunc i8 [[TMP0]] to i1
+// CHECK-NEXT:    [[LOADEDV:%.*]] = icmp ne i8 [[TMP0]], 0
 // CHECK-NEXT:    [[LOADEDV_EXPVAL:%.*]] = call i1 @llvm.expect.i1(i1 [[LOADEDV]], i1 false)
 // CHECK-NEXT:    br i1 [[LOADEDV_EXPVAL]], label %[[IF_THEN:.*]], label %[[IF_END:.*]]
 // CHECK:       [[IF_THEN]]:
@@ -94,7 +94,7 @@ bool h() {
 // CHECK-SAME: ) #[[ATTR0]] {
 // CHECK-NEXT:  [[ENTRY:.*:]]
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV:%.*]] = trunc i8 [[TMP0]] to i1
+// CHECK-NEXT:    [[LOADEDV:%.*]] = icmp ne i8 [[TMP0]], 0
 // CHECK-NEXT:    [[LOADEDV_EXPVAL:%.*]] = call i1 @llvm.expect.i1(i1 [[LOADEDV]], i1 false)
 // CHECK-NEXT:    br i1 [[LOADEDV_EXPVAL]], label %[[IF_THEN:.*]], label %[[IF_ELSE:.*]]
 // CHECK:       [[IF_THEN]]:
@@ -118,7 +118,7 @@ void NullStmt() {
 // CHECK-SAME: ) #[[ATTR0]] {
 // CHECK-NEXT:  [[ENTRY:.*:]]
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV:%.*]] = trunc i8 [[TMP0]] to i1
+// CHECK-NEXT:    [[LOADEDV:%.*]] = icmp ne i8 [[TMP0]], 0
 // CHECK-NEXT:    [[LOADEDV_EXPVAL:%.*]] = call i1 @llvm.expect.i1(i1 [[LOADEDV]], i1 false)
 // CHECK-NEXT:    br i1 [[LOADEDV_EXPVAL]], label %[[IF_THEN:.*]], label %[[IF_END2:.*]]
 // CHECK:       [[IF_THEN]]:
@@ -130,7 +130,7 @@ void NullStmt() {
 // CHECK-NEXT:    br label %[[IF_END2]]
 // CHECK:       [[IF_END2]]:
 // CHECK-NEXT:    [[TMP1:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV3:%.*]] = trunc i8 [[TMP1]] to i1
+// CHECK-NEXT:    [[LOADEDV3:%.*]] = icmp ne i8 [[TMP1]], 0
 // CHECK-NEXT:    br i1 [[LOADEDV3]], label %[[IF_THEN4:.*]], label %[[IF_END8:.*]]
 // CHECK:       [[IF_THEN4]]:
 // CHECK-NEXT:    [[CALL5:%.*]] = call noundef zeroext i1 @_Z1Bv()
@@ -158,7 +158,7 @@ void IfStmt() {
 // CHECK-SAME: ) #[[ATTR0]] {
 // CHECK-NEXT:  [[ENTRY:.*:]]
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV:%.*]] = trunc i8 [[TMP0]] to i1
+// CHECK-NEXT:    [[LOADEDV:%.*]] = icmp ne i8 [[TMP0]], 0
 // CHECK-NEXT:    [[LOADEDV_EXPVAL:%.*]] = call i1 @llvm.expect.i1(i1 [[LOADEDV]], i1 false)
 // CHECK-NEXT:    br i1 [[LOADEDV_EXPVAL]], label %[[IF_THEN:.*]], label %[[IF_END:.*]]
 // CHECK:       [[IF_THEN]]:
@@ -172,7 +172,7 @@ void IfStmt() {
 // CHECK-NEXT:    br label %[[IF_END]]
 // CHECK:       [[IF_END]]:
 // CHECK-NEXT:    [[TMP1:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV1:%.*]] = trunc i8 [[TMP1]] to i1
+// CHECK-NEXT:    [[LOADEDV1:%.*]] = icmp ne i8 [[TMP1]], 0
 // CHECK-NEXT:    br i1 [[LOADEDV1]], label %[[IF_THEN2:.*]], label %[[IF_END7:.*]]
 // CHECK:       [[IF_THEN2]]:
 // CHECK-NEXT:    br label %[[WHILE_COND3:.*]]
@@ -201,7 +201,7 @@ void WhileStmt() {
 // CHECK-SAME: ) #[[ATTR0]] {
 // CHECK-NEXT:  [[ENTRY:.*:]]
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV:%.*]] = trunc i8 [[TMP0]] to i1
+// CHECK-NEXT:    [[LOADEDV:%.*]] = icmp ne i8 [[TMP0]], 0
 // CHECK-NEXT:    [[LOADEDV_EXPVAL:%.*]] = call i1 @llvm.expect.i1(i1 [[LOADEDV]], i1 false)
 // CHECK-NEXT:    br i1 [[LOADEDV_EXPVAL]], label %[[IF_THEN:.*]], label %[[IF_END:.*]]
 // CHECK:       [[IF_THEN]]:
@@ -215,7 +215,7 @@ void WhileStmt() {
 // CHECK-NEXT:    br label %[[IF_END]]
 // CHECK:       [[IF_END]]:
 // CHECK-NEXT:    [[TMP1:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV1:%.*]] = trunc i8 [[TMP1]] to i1
+// CHECK-NEXT:    [[LOADEDV1:%.*]] = icmp ne i8 [[TMP1]], 0
 // CHECK-NEXT:    br i1 [[LOADEDV1]], label %[[IF_THEN2:.*]], label %[[IF_END7:.*]]
 // CHECK:       [[IF_THEN2]]:
 // CHECK-NEXT:    br label %[[DO_BODY3:.*]]
@@ -245,7 +245,7 @@ void DoStmt() {
 // CHECK-SAME: ) #[[ATTR0]] {
 // CHECK-NEXT:  [[ENTRY:.*:]]
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV:%.*]] = trunc i8 [[TMP0]] to i1
+// CHECK-NEXT:    [[LOADEDV:%.*]] = icmp ne i8 [[TMP0]], 0
 // CHECK-NEXT:    [[LOADEDV_EXPVAL:%.*]] = call i1 @llvm.expect.i1(i1 [[LOADEDV]], i1 false)
 // CHECK-NEXT:    br i1 [[LOADEDV_EXPVAL]], label %[[IF_THEN:.*]], label %[[IF_END:.*]]
 // CHECK:       [[IF_THEN]]:
@@ -259,7 +259,7 @@ void DoStmt() {
 // CHECK-NEXT:    br label %[[IF_END]]
 // CHECK:       [[IF_END]]:
 // CHECK-NEXT:    [[TMP1:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV1:%.*]] = trunc i8 [[TMP1]] to i1
+// CHECK-NEXT:    [[LOADEDV1:%.*]] = icmp ne i8 [[TMP1]], 0
 // CHECK-NEXT:    br i1 [[LOADEDV1]], label %[[IF_THEN2:.*]], label %[[IF_END7:.*]]
 // CHECK:       [[IF_THEN2]]:
 // CHECK-NEXT:    br label %[[FOR_COND3:.*]]
@@ -287,7 +287,7 @@ void ForStmt() {
 // CHECK-SAME: ) #[[ATTR0]] {
 // CHECK-NEXT:  [[ENTRY:.*:]]
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV:%.*]] = trunc i8 [[TMP0]] to i1
+// CHECK-NEXT:    [[LOADEDV:%.*]] = icmp ne i8 [[TMP0]], 0
 // CHECK-NEXT:    [[LOADEDV_EXPVAL:%.*]] = call i1 @llvm.expect.i1(i1 [[LOADEDV]], i1 false)
 // CHECK-NEXT:    br i1 [[LOADEDV_EXPVAL]], label %[[IF_THEN:.*]], label %[[IF_ELSE:.*]]
 // CHECK:       [[IF_THEN]]:
@@ -314,7 +314,7 @@ end:;
 // CHECK-SAME: ) #[[ATTR0]] {
 // CHECK-NEXT:  [[ENTRY:.*:]]
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV:%.*]] = trunc i8 [[TMP0]] to i1
+// CHECK-NEXT:    [[LOADEDV:%.*]] = icmp ne i8 [[TMP0]], 0
 // CHECK-NEXT:    [[LOADEDV_EXPVAL:%.*]] = call i1 @llvm.expect.i1(i1 [[LOADEDV]], i1 false)
 // CHECK-NEXT:    br i1 [[LOADEDV_EXPVAL]], label %[[IF_THEN:.*]], label %[[IF_ELSE:.*]]
 // CHECK:       [[IF_THEN]]:
@@ -338,7 +338,7 @@ void ReturnStmt() {
 // CHECK-SAME: ) #[[ATTR0]] {
 // CHECK-NEXT:  [[ENTRY:.*:]]
 // CHECK-NEXT:    [[TMP0:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV:%.*]] = trunc i8 [[TMP0]] to i1
+// CHECK-NEXT:    [[LOADEDV:%.*]] = icmp ne i8 [[TMP0]], 0
 // CHECK-NEXT:    [[LOADEDV_EXPVAL:%.*]] = call i1 @llvm.expect.i1(i1 [[LOADEDV]], i1 false)
 // CHECK-NEXT:    br i1 [[LOADEDV_EXPVAL]], label %[[IF_THEN:.*]], label %[[IF_ELSE:.*]]
 // CHECK:       [[IF_THEN]]:
@@ -352,7 +352,7 @@ void ReturnStmt() {
 // CHECK-NEXT:    br label %[[IF_END]]
 // CHECK:       [[IF_END]]:
 // CHECK-NEXT:    [[TMP2:%.*]] = load volatile i8, ptr @b, align 1, !tbaa [[BOOL_TBAA6]], !range [[RNG8]], !noundef [[META9]]
-// CHECK-NEXT:    [[LOADEDV1:%.*]] = trunc i8 [[TMP2]] to i1
+// CHECK-NEXT:    [[LOADEDV1:%.*]] = icmp ne i8 [[TMP2]], 0
 // CHECK-NEXT:    br i1 [[LOADEDV1]], label %[[IF_THEN2:.*]], label %[[IF_ELSE4:.*]]
 // CHECK:       [[IF_THEN2]]:
 // CHECK-NEXT:    [[TMP3:%.*]] = load volatile i32, ptr @i, align 4, !tbaa [[INT_TBAA2]]

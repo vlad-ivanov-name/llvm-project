@@ -2249,14 +2249,15 @@ llvm::Value *CodeGenFunction::EmitFromMemory(llvm::Value *Value, QualType Ty) {
   }
 
   llvm::Type *ResTy = ConvertType(Ty);
-  bool HasBoolRep = Ty->hasBooleanRepresentation();
-  if (HasBoolRep && CGM.getCodeGenOpts().getLoadBoolFromMem() ==
-                        CodeGenOptions::BoolFromMem::NonZero) {
-    return Builder.CreateICmpNE(
-        Value, llvm::Constant::getNullValue(Value->getType()), "loadedv");
-  }
-  if (HasBoolRep || Ty->isBitIntType() || Ty->isExtVectorBoolType())
+  if (Ty->isBitIntType() || Ty->isExtVectorBoolType())
     return Builder.CreateTrunc(Value, ResTy, "loadedv");
+  
+  if (Ty->hasBooleanRepresentation()) {
+    bool TruncateOrCmp0 = CGM.getCodeGenOpts().getLoadBoolFromMem() == CodeGenOptions::BoolFromMem::Truncate;
+    return TruncateOrCmp0
+    ? Builder.CreateTrunc(Value, ResTy, "loadedv")
+    : Builder.CreateICmpNE(Value, llvm::Constant::getNullValue(Value->getType()), "loadedv");
+  }
 
   return Value;
 }

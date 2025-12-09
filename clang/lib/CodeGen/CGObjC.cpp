@@ -1194,10 +1194,11 @@ CodeGenFunction::generateObjCGetterBody(const ObjCImplementationDecl *classImpl,
     llvm::LoadInst *load = Builder.CreateLoad(ivarAddr, "load");
     load->setAtomic(llvm::AtomicOrdering::Unordered);
     llvm::Value *ivarVal = load;
+    QualType getterType = getterMethod->getReturnType();
     if (PointerAuthQualifier PAQ = ivar->getType().getPointerAuth()) {
       CGPointerAuthInfo SrcInfo = EmitPointerAuthInfo(PAQ, ivarAddr);
       CGPointerAuthInfo TargetInfo =
-          CGM.getPointerAuthInfoForType(getterMethod->getReturnType());
+          CGM.getPointerAuthInfoForType(getterType);
       ivarVal = emitPointerAuthResign(ivarVal, ivar->getType(), SrcInfo,
                                       TargetInfo, /*isKnownNonNull=*/false);
     }
@@ -1205,11 +1206,18 @@ CodeGenFunction::generateObjCGetterBody(const ObjCImplementationDecl *classImpl,
     // Store that value into the return address.  Doing this with a
     // bitcast is likely to produce some pretty ugly IR, but it's not
     // the *most* terrible thing in the world.
-    llvm::Type *retTy = ConvertType(getterMethod->getReturnType());
+    llvm::Type *retTy = ConvertType(getterType);
     uint64_t retTySize = CGM.getDataLayout().getTypeSizeInBits(retTy);
     if (ivarSize > retTySize) {
-      bitcastType = llvm::Type::getIntNTy(getLLVMContext(), retTySize);
-      ivarVal = Builder.CreateTrunc(ivarVal, bitcastType);
+      if (getterType->hasBooleanRepresentation() && !(getterType->isBitIntType() || getterType->isExtVectorBoolType())) {
+        bool TruncateOrCmp0 = CGM.getCodeGenOpts().getLoadBoolFromMem() == CodeGenOptions::BoolFromMem::Truncate;
+        ivarVal = TruncateOrCmp0
+          ? Builder.CreateTrunc(ivarVal, bitcastType)
+          : Builder.CreateICmpNE(ivarVal, llvm::Constant::getNullValue(ivarVal->getType()));
+      } else {
+        bitcastType = llvm::Type::getIntNTy(getLLVMContext(), retTySize);
+        ivarVal = Builder.CreateTrunc(ivarVal, bitcastType);
+      }
     }
     Builder.CreateStore(ivarVal, ReturnValue.withElementType(bitcastType));
 
